@@ -1,56 +1,26 @@
+import axios from "axios";
+import Movie from "./Movie";
+import React, { Component, useContext, useEffect, useState } from "react";
+import { moviesContext } from "../Contexts/MoviesContextProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { Box } from "@mui/material";
 
-import React, { useContext, useEffect, useState } from "react";
-import OneMovie from "./OneMovie";
-import { MovieContext } from "../contexts/contextMovie";
 
 function Movies() {
-  const [loading, setLoading] = useState(true);
-  const {movieList} = useContext(MovieContext)
-  useEffect(() => {
-    if(movieList) {
-      setLoading(false);
-    }
-    // axios
-    //   .get("https://api.themoviedb.org/3/discover/movie", {
-    //     params: {
-    //       sort_by: "popularity.desc",
-    //       api_key: "9813ce01a72ca1bd2ae25f091898b1c7",
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setMovies(response.data.results);
-    //     console.log(response.data.results);
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setLoading(false);
-    //     console.log(err);
-    //   });
+  // const { moviesArr, setMovies } = useContext(moviesContext);
+  const allMovies = useSelector(state=>state.movies.movies)
+  const counter = useSelector(state=>state.movies.counter)
 
-  }, [movieList]); // empty dependency array means this effect will only run once (component mount)
-
-  if (loading) {
-    return (
-      <div>
-        <h1>loading...</h1>
-      </div>
-    );
-  }
-
+  if (!allMovies) return <div>Loading....</div>;
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          minWidth: "1000px",
-          justifyContent: "center",
-        }}
-      >
-        {movieList.map((movie) => {
-          return <OneMovie key={movie.id} movie={movie}></OneMovie>;
-        })}
-      </div>
+    <Box>
+      <h2>Movies Counter: {counter}</h2>
+    </Box>
+    <br/>
+      {allMovies.map((movie) => (
+        <Movie movie={movie} key={movie.id}></Movie>
+      ))}
     </>
   );
 }
